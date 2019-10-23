@@ -1,7 +1,7 @@
 
 #game settings
 s=4
-WIDTH = 256*s
+WIDTH = 256*3
 HEIGHT = 150*s
 FPS = 120
 FAST_FRAME = FPS / 12
