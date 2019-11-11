@@ -1,6 +1,6 @@
 
-from nova import *
-from random import randrange
+#from nova import *
+from classes import *
 
 class Game(BaseScene):
     def __init__(self):
@@ -23,38 +23,32 @@ class Game(BaseScene):
     def new(self):
         self.map.data.convert_surfaces(self.screen,True)
         #Grupo de elementos a dibujar
-        self.toggleDebug=False
+        self.collisionGroup = []
         self.SpritesGroup = Entity()
         self.SpritesGroup.addComponent(pyscroll.PyscrollGroup(map_layer=self.map.layer))
         #Grupos de entidades para actualizar
         self.entitySys = EntitySystem(self,'primerGrupo')
         self.entitySys.addEntity(self.SpritesGroup)
-              
-        for i in range(0,100):
-            cuca = Entity()
-            cuca.addComponent(PointComponent(randrange(0,WIDTH),randrange(0,HEIGHT)))
-            cuca.addComponent(SpriteComponent(["0.png","1.png"],self.SpritesGroup,rotation=randrange(0,360),size=randrange(1,200)))
-            #cuca.addComponent(SpriteComponent("0.png",self.SpritesGroup,rotation=randrange(0,360),size=randrange(1,200)))
-            self.entitySys.addEntity(cuca)
+        cuca = []
+        for i in range(0,20):
+            cuca.append(cucaClass(self.entitySys,self.SpritesGroup,self.collisionGroup))
         
         self.hud=Text()
 
 
     def update(self):
         self.delta_time = self.clock.tick(FPS) / 1000
-        #self.map.layer.center(self.player.pos)#la camara(el mapa) mira hacia el target
+        self.map.layer.center(pygame.mouse.get_pos())#la camara(el mapa) mira hacia el target
+        self.entitySys.update()
         pass
 
 
     def draw_scene(self):
 
-        self.entitySys.update()
+        
 
         self.hud.draw_text(['fps: '+str(self.clock.get_fps())[0:4]],self.screen)
         
-        if self.toggleDebug==True:
-            self.group_all_entities.draw_debug(self.screen,self.group_all_sprites)
-
         pygame.display.update(self.screen.get_rect())
         pass
     def events(self):
